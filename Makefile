@@ -59,6 +59,10 @@ supermin.d/packages: supermin
 supermin.d/init.tar.gz: init
 	tar zcf $@ $^
 
+#Shutdown script target
+supermin.d/shutdown.tar.gz: shutdown
+	tar zcf $@ $^
+
 supermin.d/workloads.tar.gz: workloads
 	tar zcf $@ $^
 
@@ -84,7 +88,7 @@ supermin.d/server.static.tar.gz: server.static
 	tar zcf $@ $^
 
 $(TARGET)/root: supermin.d/packages supermin.d/init.tar.gz supermin.d/workloads.tar.gz \
-	supermin.d/set_irq_affinity_virtio.sh.tar.gz supermin.d/mybench_small.static.tar.gz
+	supermin.d/set_irq_affinity_virtio.sh.tar.gz supermin.d/mybench_small.static.tar.gz supermin.d/shutdown.tar.gz
 	supermin --build -v -v -v --size 8G --if-newer --format ext2 supermin.d -o ${@D}
 	- rm -rf $(TARGET)/root2
 	cp $(TARGET)/root $(TARGET)/root2
