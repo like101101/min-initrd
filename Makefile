@@ -12,7 +12,7 @@ VECTORS = 10
 #Removed taskset
 #QEMU = taskset -c $(TS) qemu-system-x86_64 -cpu host
 QEMU = qemu-system-x86_64 -cpu host
-options = -enable-kvm -smp cpus=$(SMP) -m 30G
+options = -enable-kvm -smp cpus=$(SMP) -m 3G
 DEBUG = -S -s
 KERNELU = -kernel ../linux/arch/x86/boot/bzImage
 SMOptions = -initrd min-initrd.d/initrd -hda min-initrd.d/root
