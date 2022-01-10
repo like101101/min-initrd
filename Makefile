@@ -14,7 +14,7 @@ SMOptions = -initrd min-initrd.d/initrd -hda min-initrd.d/root
 DISPLAY = -nodefaults -nographic -serial stdio
 MONITOR = -nodefaults -nographic -serial mon:stdio
 COMMANDLINE = -append "console=ttyS0 root=/dev/sda net.ifnames=0 biosdevname=0 nowatchdog nosmap mds=off ip=192.168.19.136:::255.255.255.0::eth0:none -- -m /workloads/iperf.xml -a"
-NETWORK = -netdev tap,id=vlan1,ifname=tap0,script=no,downscript=no,vhost=on,queues=$(QUEUES) -device virtio-net-pci,mq=on,vectors=$(VECTORS),netdev=vlan1,mac=02:00:00:04:00:29
+# NETWORK = -netdev tap,id=vlan1,ifname=tap0,script=no,downscript=no,vhost=on,queues=$(QUEUES) -device virtio-net-pci,mq=on,vectors=$(VECTORS),netdev=vlan1,mac=02:00:00:04:00:29
 
 #-----------------------------------------------
 
@@ -41,7 +41,7 @@ TARGET = min-initrd.d
 all: clean $(TARGET)/root
 
 clean:
-	clear
+	rm -rf $(TARGET)
 
 supermin:
 	@if [ ! -a $(SMD)/packages -o '$(PACKAGES) ' != "$$(tr '\n' ' ' < $(SMD)/packages)" ]; then \
@@ -49,7 +49,6 @@ supermin:
 	else \
 	  touch $(SMD)/packages; \
 	fi
-	cp ../mybench_small.static .
 
 build-package:
 	supermin --prepare $(PACKAGES) -o $(SMD)
@@ -87,11 +86,11 @@ supermin.d/mybench.static.tar.gz: mybench.static
 supermin.d/server.static.tar.gz: server.static
 	tar zcf $@ $^
 
-$(TARGET)/root: supermin.d/packages supermin.d/init.tar.gz supermin.d/workloads.tar.gz \
+$(TARGET)/root: supermin.d/packages #supermin.d/init.tar.gz supermin.d/workloads.tar.gz \
 	supermin.d/set_irq_affinity_virtio.sh.tar.gz supermin.d/mybench_small.static.tar.gz supermin.d/shutdown.tar.gz
 	supermin --build -v -v -v --size 8G --if-newer --format ext2 supermin.d -o ${@D}
-	- rm -rf $(TARGET)/root2
-	cp $(TARGET)/root $(TARGET)/root2
+	# - rm -rf $(TARGET)/root2
+	# cp $(TARGET)/root $(TARGET)/root2
 
 exportmods:
 	export SUPERMIN_KERNEL=/mnt/normal/linux/arch/x86/boot/bzImage
