@@ -38,7 +38,7 @@ NETWORK2 = -netdev tap,id=vlan1,ifname=tap2,script=no,downscript=no,vhost=on,que
 TARGET = min-initrd.d
 
 .PHONY: all supermin build-package clean
-all: clean $(TARGET)/root
+all: $(TARGET)/root
 
 clean:
 	rm -rf $(TARGET)
@@ -92,6 +92,7 @@ $(TARGET)/root: supermin.d/packages #supermin.d/init.tar.gz supermin.d/workloads
 	# - rm -rf $(TARGET)/root2
 	# cp $(TARGET)/root $(TARGET)/root2
 
+# NOTE: This might not work as written
 exportmods:
 	export SUPERMIN_KERNEL=/mnt/normal/linux/arch/x86/boot/bzImage
 	export SUPERMIN_MODULES=/mnt/normal/min-initrd/kmods/lib/modules/5.7.0+/
