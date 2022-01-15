@@ -1,19 +1,20 @@
 PACKAGES = bash coreutils iputils net-tools strace util-linux iproute pciutils ethtool kmod strace perf python vim
 SMD = supermin.d
 
-SMP = 4
+SMP = 2
 TS = 8-11
 QUEUES = 4
 VECTORS = 10
 
-QEMU = taskset -c $(TS) qemu-system-x86_64 -cpu host
-options = -enable-kvm -smp cpus=$(SMP) -m 30G
+
+QEMU = qemu-system-x86_64 -cpu host
+options = -enable-kvm -smp cpus=$(SMP) -m 6G
 DEBUG = -S -s
-KERNELU = -kernel ../linux/arch/x86/boot/bzImage
+KERNELU = -kernel vmlinuz-5.8.0-symbiote+
 SMOptions = -initrd min-initrd.d/initrd -hda min-initrd.d/root
 DISPLAY = -nodefaults -nographic -serial stdio
 MONITOR = -nodefaults -nographic -serial mon:stdio
-COMMANDLINE = -append "console=ttyS0 root=/dev/sda net.ifnames=0 biosdevname=0 nowatchdog nosmap mds=off ip=192.168.19.136:::255.255.255.0::eth0:none -- -m /workloads/iperf.xml -a"
+COMMANDLINE = -append "console=ttyS0 root=/dev/sda mitigations=off nosmep nosmap"
 # NETWORK = -netdev tap,id=vlan1,ifname=tap0,script=no,downscript=no,vhost=on,queues=$(QUEUES) -device virtio-net-pci,mq=on,vectors=$(VECTORS),netdev=vlan1,mac=02:00:00:04:00:29
 
 #-----------------------------------------------
@@ -86,9 +87,9 @@ supermin.d/mybench.static.tar.gz: mybench.static
 supermin.d/server.static.tar.gz: server.static
 	tar zcf $@ $^
 
-$(TARGET)/root: supermin.d/packages #supermin.d/init.tar.gz supermin.d/workloads.tar.gz \
+$(TARGET)/root: supermin.d/packages supermin.d/init.tar.gz #supermin.d/workloads.tar.gz \
 	supermin.d/set_irq_affinity_virtio.sh.tar.gz supermin.d/mybench_small.static.tar.gz supermin.d/shutdown.tar.gz
-	supermin --build -v -v -v --size 8G --if-newer --format ext2 supermin.d -o ${@D}
+	supermin --build -v -v -v --size 4G --if-newer --format ext2 supermin.d -o ${@D}
 	# - rm -rf $(TARGET)/root2
 	# cp $(TARGET)/root $(TARGET)/root2
 
@@ -96,6 +97,7 @@ $(TARGET)/root: supermin.d/packages #supermin.d/init.tar.gz supermin.d/workloads
 exportmods:
 	export SUPERMIN_KERNEL=/mnt/normal/linux/arch/x86/boot/bzImage
 	export SUPERMIN_MODULES=/mnt/normal/min-initrd/kmods/lib/modules/5.7.0+/
+
 
 runU:
 	$(QEMU) $(options) $(KERNELU) $(SMOptions) $(DISPLAY) $(COMMANDLINE) $(NETWORK)
