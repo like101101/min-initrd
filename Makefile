@@ -8,7 +8,7 @@ VECTORS = 10
 
 
 QEMU = qemu-system-x86_64 -cpu host
-options = -enable-kvm -smp cpus=$(SMP) -m 6G
+options = -smp cpus=$(SMP) -m 6G
 DEBUG = -S -s
 KERNELU = -kernel vmlinuz-5.8.0-symbiote+
 SMOptions = -initrd min-initrd.d/initrd -hda min-initrd.d/root
