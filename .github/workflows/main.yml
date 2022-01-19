@@ -46,5 +46,4 @@ jobs:
       - name: Boot Test Run
         run: |
           cd min-initrd 
-          chmod +x ./boot_test.sh
-          ./boot_test.sh
+          make runU
