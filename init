@@ -7,6 +7,8 @@ rm -rf mytmpfs
 mkdir /mytempfs
 mount -t tmpfs -o size=4g tmpfs /mytmpfs
 
-echo Symbiote Kernel Has Booted
+echo ****************************************
+echo Symbiote Kernel Has Successfully Booted
+echo ****************************************
 
 ./shutdown
