@@ -6,11 +6,14 @@ TS = 8-11
 QUEUES = 4
 VECTORS = 10
 
-
+# This setting is for Github Action runner
 QEMU = qemu-system-x86_64
 options = -smp cpus=$(SMP) -m 3g -no-reboot
 DEBUG = -S -s
+
+# This is a pre-complied linux within the repo
 KERNELU = -kernel vmlinuz-5.8.0-symbiote+
+
 SMOptions = -initrd min-initrd.d/initrd -hda min-initrd.d/root
 DISPLAY = -nodefaults -nographic -serial stdio
 MONITOR = -nodefaults -nographic -serial mon:stdio
@@ -27,7 +30,10 @@ VECTORS2 = 10
 QEMU2 = taskset -c $(TS2) qemu-system-x86_64 -cpu host
 options2 = -enable-kvm -smp cpus=$(SMP2) -m 30G
 DEBUG2 = -S -s
+
+# This is the kernel after compliation
 KERNELU2 = -kernel ../linux/arch/x86/boot/bzImage
+
 SMOptions2 = -initrd min-initrd.d/initrd -hda min-initrd.d/root2
 DISPLAY2 = -nodefaults -nographic -serial stdio
 MONITOR2 = -nodefaults -nographic -serial mon:stdio
@@ -99,6 +105,7 @@ exportmods:
 	export SUPERMIN_MODULES=/mnt/normal/min-initrd/kmods/lib/modules/5.7.0+/
 
 
+# runU will boot the kernel using the pre-comiled symbiote kernel within this repo
 runU:
 	$(QEMU) $(options) $(KERNELU) $(SMOptions) $(DISPLAY) $(COMMANDLINE) $(NETWORK)
 
@@ -108,5 +115,6 @@ debugU:
 monU:
 	$(QEMU) $(options) $(KERNELU) $(SMOptions) $(MONITOR) $(COMMANDLINE) $(NETWORK)
 
+# runU2 will boot the kernel using the kernel complied from symbiote linux repo.
 runU2:
 	$(QEMU) $(options) $(KERNELU2) $(SMOptions) $(DISPLAY) $(COMMANDLINE) $(NETWORK)
