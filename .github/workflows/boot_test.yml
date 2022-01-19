@@ -35,7 +35,7 @@ jobs:
           sudo apt-get install git build-essential flex bison libelf-dev libssl-dev texinfo libgmp3-dev libmpc-dev libmpfr-dev qemu-kvm supermin 
           
       # Boot the Kernel
-      - name: Boot the Kernel
+      - name: Complie min-initrd
         run: |  
           cd min-initrd 
           make build-package
@@ -43,7 +43,7 @@ jobs:
           make all
           
       # Runs Boot Test
-      - name: Boot Test Run
+      - name: Boot symbiote kernel
         run: |
           cd min-initrd 
           make runU
